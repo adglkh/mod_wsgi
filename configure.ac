@@ -23,6 +23,11 @@ AC_ARG_ENABLE(framework, AC_HELP_STRING([--enable-framework],
             [ENABLE_FRAMEWORK=$enableval],
 	    [ENABLE_FRAMEWORK=false])
 
+AC_ARG_ENABLE(snap, AC_HELP_STRING([--enable-snap],
+            [enable bulding in snap universal]),
+            [ENABLE_SNAP=$enableval],
+	    [ENABLE_SNAP=false])
+
 AC_ARG_ENABLE(embedded, AC_HELP_STRING([--disable-embedded],
             [disable mod_wsgi embedded mode]),
             [ENABLE_EMBEDDED=$enableval],
@@ -217,7 +222,11 @@ AC_SUBST(LDFLAGS)
 AC_SUBST(LDLIBS)
 AC_SUBST(DESTDIR)
 
+if test "${ENABLE_SNAP}" != "yes"; then
 LIBEXECDIR="`${APXS} -q LIBEXECDIR`"
+else
+LIBEXECDIR=/modules
+fi
 AC_SUBST(LIBEXECDIR)
 
 HTTPD_MAJOR_VERSION=`echo ${HTTPD_VERSION} | sed -e 's/\..*//'`

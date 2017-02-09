@@ -638,6 +638,7 @@ ac_subst_files=''
 ac_user_opts='
 enable_option_checking
 enable_framework
+enable_snap
 enable_embedded
 with_apxs
 with_python
@@ -1259,6 +1260,7 @@ Optional Features:
   --enable-FEATURE[=ARG]  include FEATURE [ARG=yes]
   --enable-framework      enable mod_wsgi framework link
   --disable-embedded      disable mod_wsgi embedded mode
+  --enable-snap           enable building in snap universal
 
 Optional Packages:
   --with-PACKAGE[=ARG]    use PACKAGE [ARG=yes]
@@ -1878,6 +1880,13 @@ fi
 # Check whether --with-apxs was given.
 if test "${with_apxs+set}" = set; then :
   withval=$with_apxs; APXS="$with_apxs"
+fi
+
+# Check whether --enable-snap was given.
+if test "${enable_snap+set}" = set; then :
+  enableval=$enable_snap; ENABLE_SNAP=$enableval
+else
+  ENABLE_SNAP=false
 fi
 
 
@@ -2961,7 +2970,11 @@ LDLIBS="${LDLIBS} ${LDLIBS1} ${LDLIBS2} ${LDLIBS3}"
 
 
 
+if test "${ENABLE_SNAP}" != "yes"; then
 LIBEXECDIR="`${APXS} -q LIBEXECDIR`"
+else
+LIBEXECDIR=/modules
+fi
 
 
 HTTPD_MAJOR_VERSION=`echo ${HTTPD_VERSION} | sed -e 's/\..*//'`
