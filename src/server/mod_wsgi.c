@@ -7266,8 +7266,10 @@ static const char *wsgi_add_daemon_process(cmd_parms *cmd, void *mconfig,
 
             user = value;
             uid = ap_uname2id(user);
+#if ENABLE_ROOT
             if (uid == 0)
                 return "WSGI process blocked from running as root.";
+#endif
 
             if (*user == '#') {
                 struct passwd *entry = NULL;
@@ -9654,6 +9656,7 @@ static int wsgi_start_process(apr_pool_t *p, WSGIDaemonProcess *daemon)
 
         /* Setup daemon process user/group/umask etc. */
 
+#if ENABLE_ROOT
         if (wsgi_setup_access(daemon) == -1) {
             /*
              * If we get any failure from setting up the appropriate
@@ -9672,6 +9675,7 @@ static int wsgi_start_process(apr_pool_t *p, WSGIDaemonProcess *daemon)
 
             wsgi_exit_daemon_process(-1);
         }
+#endif
 
         /* Reinitialise accept mutex in daemon process. */
 
