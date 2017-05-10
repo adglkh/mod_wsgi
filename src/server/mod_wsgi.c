@@ -8323,6 +8323,7 @@ static int wsgi_setup_socket(WSGIProcessGroup *process)
         if (process->socket_user)
             socket_uid = ap_uname2id(process->socket_user);
 
+#if ENABLE_ROOT
         if (chown(process->socket_path, socket_uid, -1) < 0) {
             ap_log_error(APLOG_MARK, APLOG_ALERT, errno, wsgi_server,
                          "mod_wsgi (pid=%d): Couldn't change owner of unix "
@@ -8330,6 +8331,7 @@ static int wsgi_setup_socket(WSGIProcessGroup *process)
                          process->socket_path, (long)socket_uid);
             return -1;
         }
+#endif
     }
 
     return sockfd;
